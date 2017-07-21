@@ -1,0 +1,20 @@
+doctype html
+html
+	head
+		title= title
+		meta(name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no")
+		link(rel='stylesheet', href='/stylesheets/login-page.css')
+	body
+		#page-center-wrapper
+			span.logo
+				span.brackets [
+				span.speciale E
+				span E
+				span.brackets ]
+			span(style="color:red") #{e}
+			form.login-form(method="POST", action="/admin/adduser")
+				input.login-username(type="text", placeholder="first name", name="firstname")
+				input.login-username(type="text", placeholder="last name", name="lastname")
+				input.login-username(type="text", placeholder="username", name="username")
+				input.login-password(type="password", placeholder="password", name="password")
+				input(type="submit", value="Register")

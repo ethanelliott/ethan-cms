@@ -1,0 +1,26 @@
+extends admin_base
+
+block content
+	.title #{title}
+	.card-row
+		.card
+			.card-content
+				.card-title Statistics
+				#curve_chart(style="width:100%;z-index0;")
+				script.
+					google.charts.load('current', {'packages':['corechart']});
+					google.charts.setOnLoadCallback(drawChart);
+					function drawChart() {
+						var data = google.visualization.arrayToDataTable(JSON.parse('!{stats}'));
+						//console.table(JSON.parse('!{stats}'));
+						var options = {
+							animation:{
+								duration: 1000,
+								easing: 'out',
+								startup: true
+							},
+							curveType: 'function'
+						};
+						var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+						chart.draw(data, options);
+					}

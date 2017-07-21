@@ -1,0 +1,101 @@
+doctype html
+html
+	head
+		title Admin | #{title}
+		meta(name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no")
+		link(rel='stylesheet', href='/stylesheets/font-awesome.min.css')
+		link(rel='stylesheet', href='/stylesheets/admin.css')
+		script(src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js")
+		script(src="//www.gstatic.com/charts/loader.js")
+	body
+		#userInfoBlob
+			img(id="user-avatar", src="/user_avatar/jim_bob.png")
+			#user-name #{user.firstname} #{user.lastname}
+			span #{user.username}
+			#user-info-menu
+				a(href="/admin/logout" onclick="showNote(2,'Signing Out...', 2000)") Sign out
+					
+		header
+			script.
+				var userInfoBlobState = false;
+				function toggleUserInfo(state) {
+					if (state === undefined) {
+						userInfoBlobState = !userInfoBlobState;
+					} else {
+						userInfoBlobState = state;
+					}
+					if (userInfoBlobState) {
+						$("#userInfoBlob").fadeIn(200);
+					} else {
+						$("#userInfoBlob").fadeOut(200);
+					}
+				}
+				function quickSnack(message, timeout) {
+					$(".snack").html(message);
+					$(".snack").fadeIn();
+					setTimeout(function() {
+						$(".snack").fadeOut(500);
+					}, timeout);
+				}
+				$("#userInfoBlob").fadeOut(0);
+				function showNote(type, message, timetogone) {
+					var noteID = salty(12);
+					var types = ["Danger", "Warning", "Success", "Info"];
+					var n = '<div id="' + noteID + '" class="note ';
+					switch (type)
+					{
+						case 0:n += "note-danger";break;
+						case 1:n += "note-warning";break;
+						case 2:n += "note-success";break;
+						case 3:n += "note-info";break;
+					}
+					n += '" style="display:none;"><p><strong>' + types[type] + '!</strong> ' + message + '</p><div class="close-button" onclick="$(\'#' + noteID + '\').remove();">&times;</div></div>'
+					$(".note-container").append(n);
+					$("#" + noteID).fadeIn();
+					if (timetogone && timetogone > 0)
+					{
+						setTimeout(function() {
+							$("#" + noteID).fadeOut(500);
+							setTimeout(function() {
+								$("#" + noteID).remove();
+							}, 500)
+						}, timetogone);
+					}
+				}
+				var salty = function (len)
+				{
+				  var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';
+				  var salt = '';
+				  for (var i = 0; i < len; i++)
+				  {
+				    var p = Math.floor(Math.random() * set.length);
+				    salt += set[p];
+				  }
+				  return salt;
+				};
+			#header-container 
+				#header-title
+					span &nbsp;COMPANY NAME
+			#header-container(style="cursor: pointer;", onclick="toggleUserInfo();")
+				span(style="margin-right:1vw;font-size:1.5em") #{user.firstname} #{user.lastname}
+				#header-userInfo
+					i(class="fa fa-user-circle faicon",aria-hidden="true")
+		.snack-bar
+			.snack
+		main(onclick="toggleUserInfo(false);")
+			#side-bar
+				#side-bar-menu
+					each item, i in menu
+						a(href="#{item.url}")
+							if item.selected
+								#menu-item.selected
+									i(class="fa fa-#{item.icon}",aria-hidden="true")
+									span #{item.name}
+									#menu-triangle
+							else
+								#menu-item
+									i(class="fa fa-#{item.icon}",aria-hidden="true")
+									span #{item.name}
+			#main-content
+				.note-container
+				block content
